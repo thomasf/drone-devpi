@@ -139,6 +139,8 @@ def check_vargs(vargs):
 def extract_vargs(payload):
     vargs = {}
     for k in payload:
+        if 'DEVPI_' in k:
+            vargs[k.replace('DEVPI_', '').lower()] = payload[k]
         if 'PLUGIN_' in k:
             vargs[k.replace('PLUGIN_', '').lower()] = payload[k]
     return vargs
