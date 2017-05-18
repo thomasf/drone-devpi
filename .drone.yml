@@ -28,17 +28,6 @@ pipeline:
       event: tag
       tag: plugin-0.6/*
 
-
-  # publish:
-  #   image: plugins/docker
-  #   username: ${DOCKER_USER}
-  #   password: ${DOCKER_PASS}
-  #   email: ${DOCKER_EMAIL}
-  #   repo: plugins/drone-devpi
-  #   when:
-  #     branch: master
-
-
 services:
   devpi:
     image: muccg/devpi:latest
