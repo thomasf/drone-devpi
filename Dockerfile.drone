@@ -1,14 +1,14 @@
 # This dockerfile is used when drone builds the image.
-FROM python:3.6-alpine
+from python:3.6-alpine
 
-RUN apk add -U \
+run apk add -U \
 	ca-certificates \
  && rm -rf /var/cache/apk/*
 
-ADD requirements.txt .
+add requirements.txt .
 add wheeldir /wheeldir
-RUN pip install --use-wheel --no-index --find-links=/wheeldir -r requirements.txt
-run rm -rf /wheeldir
-ADD run_devpi.py /usr/bin/
+run pip install --use-wheel --no-index --find-links=/wheeldir -r requirements.txt
+run rm -rf /wheeldir /requirements.txt
+add run_devpi.py /usr/bin/
 
-ENTRYPOINT ["python3", "/usr/bin/run_devpi.py"]
+entrypoint ["python3", "/usr/bin/run_devpi.py"]
