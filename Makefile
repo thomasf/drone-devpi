@@ -1,6 +1,6 @@
 .PHONY: docker
 
-IMAGE ?= plugins/drone-devpi
+IMAGE ?= thomasf/drone-devpi
 
 docker:
 		docker build --rm -t $(IMAGE) .
