@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import time
 import unittest
 
@@ -12,14 +11,15 @@ TEST_PACKAGE_PATH = os.path.join(BASE_PATH, 'testpkg')
 
 
 class DevpiTestCase(unittest.TestCase):
-    payload = {  
+    payload = {
         'DRONE_NETRC_MACHINE': 'localhost',
         'DRONE_REPO_OWNER': 'testpkg',
         'DRONE_REPO_NAME': 'testpkg',
-        'PLUGIN_SERVER': 'http://localhost:3141', 
-        'PLUGIN_INDEX': 'root/devpitest', 
+        'PLUGIN_SERVER': os.getenv('TEST_DEVPI_SERVER',
+                                   'http://127.0.0.1:3141'),
+        'PLUGIN_INDEX': 'root/devpitest',
         'PLUGIN_USERNAME': 'root',
-        'PLUGIN_PASSWORD': '' 
+        'PLUGIN_PASSWORD': ''
     }
     # We'll override the default clientdir while creating our index below.
     default_clientdir = '/tmp/devpi-testclientdir'
@@ -92,12 +92,13 @@ class DevpiTestCase(unittest.TestCase):
 class ValidationTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.payload = {  
-            'PLUGIN_SERVER': 'http://localhost:3141/', 
-            'PLUGIN_INDEX': 'root/devpitest', 
+        self.payload = {
+            'PLUGIN_SERVER': os.getenv('TEST_DEVPI_SERVER',
+                                       'http://127.0.0.1:3141'),
+            'PLUGIN_INDEX': 'root/devpitest',
             'PLUGIN_USERNAME': 'root',
-            'PLUGIN_PASSWORD': '' 
-            }
+            'PLUGIN_PASSWORD': ''
+        }
 
     def test_vargs_server_validation(self):
         """

@@ -1,4 +1,4 @@
-# This dockerfile is used when docker hub builds the image.
+# This dockerfile is used when drone builds the image.
 FROM python:3.6-alpine
 
 RUN apk add -U \
@@ -6,7 +6,9 @@ RUN apk add -U \
  && rm -rf /var/cache/apk/*
 
 ADD requirements.txt .
-RUN pip install --no-cache -r requirements.txt
+add wheeldir /wheeldir
+RUN pip install --use-wheel --no-index --find-links=/wheeldir -r requirements.txt
+run rm -rf /wheeldir
 ADD run_devpi.py /usr/bin/
 
 ENTRYPOINT ["python3", "/usr/bin/run_devpi.py"]

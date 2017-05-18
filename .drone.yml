@@ -1,24 +1,43 @@
 pipeline:
   build:
-    image: python:3.5-alpine
+    image: python:3.6-alpine
+    environment:
+      - TEST_DEVPI_SERVER=http://devpi:3141
     commands:
-      - pip install --no-cache-dir --upgrade pip setuptools wheel flake8
-      - flake8 run_devpi.py
-      - pip wheel -r requirements.txt --wheel-dir=wheeldir --find-links=wheeldir
-      - pip install --use-wheel --no-index --find-links=wheeldir -r requirements.txt
+      - mkdir -p cache/pip
+      - pip install -q --cache-dir cache/pip -r requirements.txt flake8
+      - flake8 --config=.flake8rc
       - python test.py
 
+  wheel:
+    image: python:3.6-alpine
+    commands:
+      - pip wheel --cache-dir cache/pip -r requirements.txt --wheel-dir=wheeldir --find-links=wheeldir
 
-  publish:
-    image: plugins/docker
-    username: ${DOCKER_USER}
-    password: ${DOCKER_PASS}
-    email: ${DOCKER_EMAIL}
-    repo: plugins/drone-devpi
     when:
-      branch: master
+      tag: plugin-/*
+
+  docker-release:
+    image: plugins/docker
+    dockerfile: Dockerfile.drone
+    repo: thomasf/drone-devpi
+    secrets: [ docker_repo, docker_username, docker_password ]
+    tag: [ 0.6, 0.6.0 ]
+    when:
+      tag: plugin-0.6/*
+
+
+  # publish:
+  #   image: plugins/docker
+  #   username: ${DOCKER_USER}
+  #   password: ${DOCKER_PASS}
+  #   email: ${DOCKER_EMAIL}
+  #   repo: plugins/drone-devpi
+  #   when:
+  #     branch: master
 
 
 services:
   devpi:
     image: muccg/devpi:latest
+    command: devpi-server --host 0.0.0.0
