@@ -23,7 +23,7 @@ pipeline:
     dockerfile: Dockerfile.drone
     repo: thomasf/drone-devpi
     secrets: [ docker_repo, docker_username, docker_password ]
-    tag: [ 0.6, 0.6.0 ]
+    tag: [ latest, 0.6, 0.6.0 ]
     when:
       event: tag
       tag: plugin-0.6/*
