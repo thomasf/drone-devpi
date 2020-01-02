@@ -12,7 +12,7 @@ The following is an example configuration for your .drone.yml:
 ```yaml
 pipeline:
   devpi:
-    image: thomasf/drone-devpi:0.6
+    image: thomasf/drone-devpi:5
     server: http://devpi.bigco.com:3141/
     index: root/production
     username: guido
