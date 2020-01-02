@@ -7,7 +7,8 @@ def get_version():
         git = subprocess.Popen(
             ["git", "describe", "--long"],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+            stderr=subprocess.PIPE,
+        )
     except Exception:
         return "0.0.0"
     val = git.communicate()[0]

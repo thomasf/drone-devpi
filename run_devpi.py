@@ -11,19 +11,18 @@ import urllib.parse
 
 # devpi uses a 'clientdir' arg to determine where to store state. We make
 # this overridable below to facilitate the integration test process.
-DEFAULT_CLIENTDIR = '/tmp/devpi-clientdir'
+DEFAULT_CLIENTDIR = "/tmp/devpi-clientdir"
 VERBOSE = False
 
 
-def devpi(devpi_command, devpi_args, *,
-          verbose=VERBOSE, clientdir=None, **kwargs):
+def devpi(devpi_command, devpi_args, *, verbose=VERBOSE, clientdir=None, **kwargs):
     if verbose:
-        devpi_args = ['-v'] + devpi_args
+        devpi_args = ["-v"] + devpi_args
 
     if clientdir is None:
         clientdir = DEFAULT_CLIENTDIR
-    devpi_args = ['--clientdir', clientdir] + devpi_args
-    p_args = ['devpi', devpi_command] + devpi_args
+    devpi_args = ["--clientdir", clientdir] + devpi_args
+    p_args = ["devpi", devpi_command] + devpi_args
     if verbose:
         print(" ".join(p_args))
     cmd = subprocess.Popen(p_args, **kwargs)
@@ -43,10 +42,7 @@ def select_server(server, **kwargs):
     :param str clientdir: Path to a directory for the devpi CLI to store state.
     :rtype: subprocess.CompletedProcess
     """
-    return devpi('use', [
-        '--always-set-cfg', 'yes',
-        server],
-        **kwargs)
+    return devpi("use", ["--always-set-cfg", "yes", server], **kwargs)
 
 
 def login(username, password, **kwargs):
@@ -59,10 +55,7 @@ def login(username, password, **kwargs):
     :param str clientdir: Path to a directory for the devpi CLI to store state.
     :rtype: subprocess.CompletedProcess
     """
-    return devpi('login',
-                 ['--password', password,
-                  username],
-                 **kwargs)
+    return devpi("login", ["--password", password, username], **kwargs)
 
 
 def select_index(index, **kwargs):
@@ -76,7 +69,7 @@ def select_index(index, **kwargs):
     :param str clientdir: Path to a directory for the devpi CLI to store state.
     :rtype: subprocess.CompletedProcess
     """
-    return devpi('use', [index], **kwargs)
+    return devpi("use", [index], **kwargs)
 
 
 def create_index(index, **kwargs):
@@ -89,7 +82,7 @@ def create_index(index, **kwargs):
     :param str clientdir: Path to a directory for the devpi CLI to store state.
     :rtype: subprocess.CompletedProcess
     """
-    return devpi('index', ['-c', index], **kwargs)
+    return devpi("index", ["-c", index], **kwargs)
 
 
 def upload_package(path, **kwargs):
@@ -102,9 +95,7 @@ def upload_package(path, **kwargs):
     :param str clientdir: Path to a directory for the devpi CLI to store state.
     :rtype: subprocess.CompletedProcess
     """
-    return devpi('upload',
-                 ['--from-dir', '--no-vcs'],
-                 cwd=path, **kwargs)
+    return devpi("upload", ["--from-dir", "--no-vcs"], cwd=path, **kwargs)
 
 
 def check_vargs(vargs):
@@ -115,22 +106,23 @@ def check_vargs(vargs):
     :param dict vargs: Contents of the 'vargs' JSON array in the
         the plugin input.
     """
-    server_uri = vargs.get('server', '')
+    server_uri = vargs.get("server", "")
     parsed = urllib.parse.urlsplit(server_uri)
     if not all([parsed.scheme, parsed.netloc]):
         print(
             "You must specify the full, absolute URI to your devpi server "
-            "(including protocol).")
+            "(including protocol)."
+        )
         sys.exit(1)
-    index = vargs.get('index')
+    index = vargs.get("index")
     if not index:
         print("You must specify an index on your devpi server to upload to.")
         sys.exit(1)
-    username = vargs.get('username')
+    username = vargs.get("username")
     if not username:
         print("You must specify a username to upload packages as.")
         sys.exit(1)
-    password = vargs.get('password')
+    password = vargs.get("password")
     if password is None:
         print("You must specify a password.")
         sys.exit(1)
@@ -139,10 +131,10 @@ def check_vargs(vargs):
 def extract_vargs(payload):
     vargs = {}
     for k in payload:
-        if 'DEVPI_' in k:
-            vargs[k.replace('DEVPI_', '').lower()] = payload[k]
-        if 'PLUGIN_' in k:
-            vargs[k.replace('PLUGIN_', '').lower()] = payload[k]
+        if "DEVPI_" in k:
+            vargs[k.replace("DEVPI_", "").lower()] = payload[k]
+        if "PLUGIN_" in k:
+            vargs[k.replace("PLUGIN_", "").lower()] = payload[k]
     return vargs
 
 
@@ -151,12 +143,12 @@ def main():
     vargs = extract_vargs(payload)
     check_vargs(vargs)
 
-    select_server(vargs['server'])
-    login(vargs['username'], vargs['password'])
-    select_index(vargs['index'])
+    select_server(vargs["server"])
+    login(vargs["username"], vargs["password"])
+    select_index(vargs["index"])
     package_path = os.getcwd()
     if VERBOSE:
-        print("package path: {}".format(package_path))
+        print(f"package path: {package_path}")
     upload_package(package_path)
 
 
