@@ -1,5 +1,5 @@
 # This dockerfile is used when docker hub builds the image.
-FROM python:3.6-alpine
+FROM python:3.8
 
 RUN apk add -U \
 	ca-certificates \
