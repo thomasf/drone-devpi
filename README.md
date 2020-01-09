@@ -2,27 +2,13 @@
 
 Drone plugin for publishing Python packages to a [devpi](http://doc.devpi.net/) index.
 
-### Example drone pipeline
+### Usage
 
-```
-kind: pipeline
-type: docker
-name: release
+See [DOCS.md](DOCS.md)
 
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: devpi release
-  image: thomasf/drone-devpi:5
-  settings:
-    index: root/prod
-    password:
-      from_secret: devpi_password
-    server: https://ci:vvhQmemP0X0T@devpi.example.com
-    username: drone
-```
+I also maintain a docker container version of devpi server which is a good
+match for this drone plugin:
+[https://github.com/thomasf/docker-devpi](https://github.com/thomasf/docker-devpi)
 
 ## Local Development
 
